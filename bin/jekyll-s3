@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
+
+require 'commander/import'
+require 'jekyll-s3'
+
+program :name, 'jekyll-s3'
+program :version, '0.1.0'
+program :description, 'This Gem allows you to push your Jekyll site to AWS S3.'
+
+# shold be help
+default_command :deploy
+
+global_option '-s', '--source [DIR]', 'Source directory'
+global_option '-b', '--s3_bucket [BUCKET]', 'Destination bucket'
+global_option '--s3_id [S3_ID]', 'S3 Access key ID'
+global_option '--s3_secret [S3_SECRET]', 'S3 Secret Access key'
+# optionallt process jekyll site first.. defaults to false
+
+command :deploy do |c|
+  c.syntax = 'jekyll deploy [options]'
+  c.description = 'Deploy site to S3 endpoint'
+
+  c.action do |args, options|
+    options = Jekyll::S3.configuration(options.__hash__)
+
+    Jekyll::S3::Site.new(options).process
+  end
+end
+
+# command :template
+# if Jekyll::S3::check_config?(Dir.pwd)
+#   puts "Configuration file exists.. proceeding"
+#   # This file should handle the deletes using a callback style thing
+#   # Jekyll::S3.process
+# else
+#   Jekyll::S3::create_config_template(Dir.pwd)
+#   puts "No configuration file, a template has been created in your current directory. Update it with your AWS credentials"
+# end
+
+# command :setup site and all configurations and whatnot(bucket)
+
