@@ -48,15 +48,17 @@ module Jekyll
       Digest::MD5.hexdigest(File.read(path(file)))
     end
 
+    def gzipped file
+      File.read(path(file), 2) == [0x1F,0x8B].pack('c*').freeze
+    end
+
     def upload file
-      mime_type = MIME::Types.type_for(path(file)).first
+      headers = {}
 
-      upload_succeeded = self.bucket.objects[file].write(
-        File.read(path(file)),
-        :content_type => mime_type
-      )
+      headers[:content_type] = MIME::Types.type_for(path(file)).first
+      headers[:content_encoding] = :gzip if gzipped(file)
 
-      if upload_succeeded
+      if self.bucket.objects[file].write(File.read(path(file)), headers)
         puts("#{file} uploaded")
       else
         puts("#{file} upload FAILED!")
