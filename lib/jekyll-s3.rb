@@ -4,19 +4,17 @@ require 'aws-sdk'
 require 'mime/types'
 require 'digest/md5'
 
-require 'jekyll-s3/site'
-require 'jekyll-s3/core_ext'
-require 'jekyll-s3/base'
+require 'jekyll-s3/s3'
 
 module Jekyll
-  module S3
-    VERSION = '0.1.0'
-
+  class S3
     DEFAULTS = {
-      's3_id'       => '',
-      's3_secret'   => '',
-      's3_bucket'   => '',
-      's3_endpoint' => 's3.amazonaws.com',
+      's3_id'     => '',
+      's3_secret' => '',
+      's3_bucket' => '',
+
+      's3_endpoint'           => 's3.amazonaws.com',
+      's3_reduced_redundancy' => false
     }
 
     def self.configuration(override)
@@ -46,7 +44,7 @@ module Jekyll
       jekyll_config['source'] = jekyll_config.delete('destination')
 
       # Jekyll::configuration < Jekyll::S3::DEFAULTS < config < override
-      jekyll_config.deep_merge(Jekyll::S3::DEFAULTS).deep_merge(config).deep_merge(override)
+      jekyll_config.merge(DEFAULTS).merge(config).merge(override)
     end
   end
 end
