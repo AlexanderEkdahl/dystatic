@@ -7,9 +7,9 @@ module Jekyll
                        :secret_access_key => config['s3_secret'],
                        :s3_endpoint       => config['s3_endpoint'] )
 
-      self.source             = File.expand_path(config['source'])
-      self.bucket             = s3.buckets[config['s3_bucket']]
-      self.static             = config['static'].split
+      self.source = File.expand_path(config['source'])
+      self.bucket = s3.buckets[config['s3_bucket']]
+      self.static = config['static'].split
     end
 
     def process
