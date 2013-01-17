@@ -1,6 +1,6 @@
 module Jekyll
   class S3
-    attr_accessor :source, :bucket, :reduced_redundancy
+    attr_accessor :source, :bucket, :static
 
     def initialize config
       s3 = AWS::S3.new(:access_key_id     => config['s3_id'],
@@ -9,7 +9,7 @@ module Jekyll
 
       self.source             = File.expand_path(config['source'])
       self.bucket             = s3.buckets[config['s3_bucket']]
-      self.reduced_redundancy = config['s3_reduced_redundancy']
+      self.static             = config['static'].split
     end
 
     def process
@@ -52,17 +52,22 @@ module Jekyll
       File.read(path(file), 2) == [0x1F,0x8B].pack('c*').freeze
     end
 
-    def upload file
+    def headers file
       headers = {}
 
       headers[:content_type] = MIME::Types.type_for(path(file)).first
       headers[:content_encoding] = :gzip if gzipped?(file)
 
-      if self.bucket.objects[file].write(File.read(path(file)), headers)
-        puts("#{file} uploaded")
-      else
-        puts("#{file} upload FAILED!")
+      self.static.each do |s|
+        headers[:cache_control] = :"max-age=31536000, public" if /#{s}\// =~ file
       end
+
+      headers
+    end
+
+    def upload file
+      self.bucket.objects[file].write(File.read(path(file)), headers(file))
+      puts("#{file} uploaded")
     end
 
     def delete file

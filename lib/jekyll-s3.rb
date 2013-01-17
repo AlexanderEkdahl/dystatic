@@ -14,7 +14,8 @@ module Jekyll
       's3_bucket' => '',
 
       's3_endpoint'           => 's3.amazonaws.com',
-      's3_reduced_redundancy' => false
+
+      'static' => 'assets'
     }
 
     def self.configuration(override)
