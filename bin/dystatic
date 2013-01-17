@@ -3,11 +3,11 @@
 $:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
 
 require 'commander/import'
-require 'jekyll-s3'
+require 'dystatic'
 
-program :name, 'jekyll-s3'
-program :version, '0.1.0'
-program :description, 'This Gem allows you to push your Jekyll site to AWS S3.'
+program :name, 'dystatic'
+program :version, Dystatic::VERSION
+program :description, 'This Gem allows you to push your static site to AWS S3.'
 
 default_command :help
 
@@ -18,12 +18,12 @@ global_option '--s3_secret [S3_SECRET]', 'S3 Secret Access key'
 global_option '--s3_endpoint [S3_ENDPOINT]', 'S3 Endpont(default is s3.amazonaws.com)'
 
 command :deploy do |c|
-  c.syntax = 'jekyll-s3 deploy [options]'
+  c.syntax = 'dystatic deploy [options]'
   c.description = 'Deploy site to S3 endpoint'
 
   c.action do |args, options|
-    options = Jekyll::S3.configuration(options.__hash__)
+    options = Dystatic.configuration(options.__hash__)
 
-    Jekyll::S3.new(options).process
+    Dystatic::S3.new(options).process
   end
 end

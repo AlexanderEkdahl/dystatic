@@ -1,4 +1,4 @@
-module Jekyll
+module Dystatic
   class S3
     attr_accessor :source, :bucket, :static
 
@@ -22,12 +22,12 @@ module Jekyll
         upload(f) if md5(f) != md5(obj)
       end
 
-      (local - remote).each do |f|
-        upload(f)
-      end
-
       (remote - local).each do |f|
         delete(f)
+      end
+
+      (local - remote).each do |f|
+        upload(f)
       end
     end
 
@@ -59,7 +59,9 @@ module Jekyll
       headers[:content_encoding] = :gzip if gzipped?(file)
 
       self.static.each do |s|
-        headers[:cache_control] = :"max-age=31536000, public" if /#{s}\// =~ file
+        if /#{s}\// =~ file
+          headers[:cache_control] = :"max-age=31536000, public"
+        end
       end
 
       headers
