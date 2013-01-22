@@ -27,11 +27,11 @@ Deploy your static site to S3.
 
 By default, dystatic uses the US Standard Region but can be changed by passing the ```s3_endpoint``` setting
 
-For example, if your bucket is in EU, add ```s3_endpoint: s3-eu-west-1.amazonaws.com``` to ```dystatic.yml```
+For example, if your bucket is in EU, add ```s3_endpoint: s3-eu-west-1.amazonaws.com``` to ```_dystatic.yml```
 
 ###Custom source directory
 
-Add ```source: YOUR_FOLDER``` to ```dystatic.yml``` or use ```dystatic deploy -s [DIR]```
+Add ```source: YOUR_FOLDER``` to ```_dystatic.yml``` or use ```dystatic deploy -s [DIR]```
 
 ###Deploying from your current folder
 
