@@ -43,7 +43,7 @@ module Dystatic
 
     def md5 file
       if file.respond_to? :etag
-        return file.etag.gsub('"', '')
+        return file.etag[1..32]
       end
       Digest::MD5.hexdigest(File.read(path(file)))
     end

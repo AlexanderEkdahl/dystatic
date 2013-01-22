@@ -13,6 +13,7 @@ default_command :help
 
 global_option '-s', '--source [DIR]', 'Source directory'
 global_option '-b', '--s3_bucket [BUCKET]', 'Destination bucket'
+global_option '-c', '--config [CONFIG]', 'Configuration file'
 global_option '--s3_id [S3_ID]', 'S3 Access key ID'
 global_option '--s3_secret [S3_SECRET]', 'S3 Secret Access key'
 global_option '--s3_endpoint [S3_ENDPOINT]', 'S3 Endpont(default is s3.amazonaws.com)'

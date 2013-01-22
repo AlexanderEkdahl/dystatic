@@ -1,7 +1,8 @@
 require 'yaml'
+require 'digest/md5'
+
 require 'aws-sdk'
 require 'mime/types'
-require 'digest/md5'
 
 require 'dystatic/s3'
 
@@ -10,6 +11,7 @@ module Dystatic
 
   DEFAULTS = {
     'source' => File.join(Dir.pwd, '_site'),
+    'config' => File.join(Dir.pwd, '_dystatic.yml'),
 
     's3_id'       => '',
     's3_secret'   => '',
@@ -23,12 +25,8 @@ module Dystatic
     # Convert any symbol keys to strings and remove the old key/values
     override = override.reduce({}) { |hash, (k,v)| hash.merge(k.to_s => v) }
 
-    # _jekyll_s3.yml may override default source location, but until
-    # then, we need to know where to look for _config.yml
-    source = override['source'] || DEFAULTS['source']
+    config_file = override['config'] || DEFAULTS['config']
 
-    # Get configuration from <source>/_jekyll_s3.yml
-    config_file = File.join(source, '../_dystatic.yml')
     begin
       config = YAML.load_file(config_file)
       raise "Invalid configuration - #{config_file}" unless config.is_a?(Hash)

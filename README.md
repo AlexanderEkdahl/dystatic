@@ -36,7 +36,7 @@ Add ```source: YOUR_FOLDER``` to ```dystatic.yml``` or use ```dystatic deploy -s
 ###Deploying from your current folder
 
       dystatic deploy -s . --s3_id YOUR_ACCESS_ID --s3_secret YOUR_ACCESS_SECRET --s3_bucket BUCKET_NAME
-      
+
 __For more settings use ```dystatic -h```__
 
 ## Known issues
@@ -49,3 +49,5 @@ __For more settings use ```dystatic -h```__
 * Cloudfront invalidation
 * Create gem
 * dystatic.yml erb support
+* Website configuration
+* Speed up etag retrieval https://github.com/aws/aws-sdk-ruby/pull/84 with refinements
