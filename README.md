@@ -1,6 +1,6 @@
 # Dystatic
 
-Deploy your static site to S3.
+Deploy your Jekyll/Nanoc/Blacksmith site to S3.
 
 ## Features
 
@@ -9,9 +9,18 @@ Deploy your static site to S3.
 * Adds appropriate headers for gzipped files
 * Cache control for static-static files
 
+## Installation
+
+        git clone https://github.com/AlexanderEkdahl/dystatic.git
+        cd dystatic
+        gem build dystatic.gemspec
+        gem install dystatic-0.1.0.gem
+        
+This gem is not on RubyGems yet because of the lack of tests.
+
 ## Usage
 
-1. Go to the folder containing the source of your jekyll/static-site
+1. Go to the folder containing the source of your static site
 
 1. Create a file named ```_dystatic.yml``` containing:
 
