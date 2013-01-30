@@ -15,7 +15,7 @@ Deploy your Jekyll/Nanoc/Blacksmith site to S3.
         cd dystatic
         gem build dystatic.gemspec
         gem install dystatic-0.1.0.gem
-        
+
 This gem is not on RubyGems yet because of the lack of tests.
 
 ## Usage
@@ -56,7 +56,10 @@ __For more settings use ```dystatic -h```__
 
 * Push tests(they are currently using private data)
 * Cloudfront invalidation
-* Create gem
 * dystatic.yml erb support
-* Website configuration
+* Website configuration(bucket policy)
 * Speed up etag retrieval https://github.com/aws/aws-sdk-ruby/pull/84 with refinements
+* Refactor out S3 specific code and add SSH implementation
+* S3 Redirections
+* Route53
+* www bucket

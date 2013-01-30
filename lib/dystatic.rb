@@ -22,9 +22,6 @@ module Dystatic
   }
 
   def self.configuration(override)
-    # Convert any symbol keys to strings and remove the old key/values
-    override = override.reduce({}) { |hash, (k,v)| hash.merge(k.to_s => v) }
-
     config_file = override['config'] || DEFAULTS['config']
 
     begin

@@ -25,6 +25,17 @@ command :deploy do |c|
   c.action do |args, options|
     options = Dystatic.configuration(options.__hash__)
 
-    Dystatic::S3.new(options).process
+    Dystatic::S3.new(options).deploy
+  end
+end
+
+command :setup do |c|
+  c.syntax = 'dystatic setup [options]'
+  c.description = 'Create and setup remote bucket'
+
+  c.action do |args, options|
+    options = Dystatic.configuration(options.__hash__)
+
+    Dystatic::S3.new(options).setup
   end
 end

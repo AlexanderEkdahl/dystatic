@@ -1,6 +1,6 @@
 module Dystatic
   class S3
-    attr_accessor :source, :bucket, :static
+    attr_accessor :source, :bucket, :static, :config
 
     def initialize config
       s3 = AWS::S3.new(:access_key_id     => config['s3_id'],
@@ -8,16 +8,27 @@ module Dystatic
                        :s3_endpoint       => config['s3_endpoint'] )
 
       self.source = File.expand_path(config['source'])
-      self.bucket = s3.buckets[config['s3_bucket']]
       self.static = config['static'].split
+      self.bucket = s3.buckets[config['s3_bucket']]
+      self.config = config
+
+      setup(config) unless bucket.exists?
     end
 
-    def process
-      local  = self.local
-      remote = self.bucket.objects.map(&:key)
+    def setup
+      unless bucket.exists?
+        self.bucket = s3.buckets.create(config['s3_bucket'])
+      end
+
+      bucket.configure_website
+    end
+
+    def deploy
+      local  = files
+      remote = bucket.objects.map(&:key)
 
       (local & remote).each do |f|
-        obj = self.bucket.objects[f]
+        obj = bucket.objects[f]
 
         upload(f) if md5(f) != md5(obj)
       end
@@ -31,14 +42,14 @@ module Dystatic
       end
     end
 
-    def local
-      Dir[self.source + '/**/{*,.*}']
+    def files
+      Dir[source + '/**/{*,.*}']
         .delete_if { |f| File.directory?(f) }
         .map       { |f| f.sub(/#{source}\//, '') }
     end
 
     def path file
-      File.join(self.source, file)
+      File.join(source, file)
     end
 
     def md5 file
@@ -58,7 +69,7 @@ module Dystatic
       headers[:content_type] = MIME::Types.type_for(path(file)).first
       headers[:content_encoding] = :gzip if gzipped?(file)
 
-      self.static.each do |s|
+      static.each do |s|
         if /#{s}\// =~ file
           headers[:cache_control] = :"max-age=31536000, public"
         end
@@ -68,12 +79,12 @@ module Dystatic
     end
 
     def upload file
-      self.bucket.objects[file].write(File.read(path(file)), headers(file))
+      bucket.objects[file].write(File.read(path(file)), headers(file))
       puts("#{file} uploaded")
     end
 
     def delete file
-      self.bucket.objects[file].delete
+      bucket.objects[file].delete
       puts "#{file} deleted"
     end
   end
