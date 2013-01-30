@@ -63,3 +63,5 @@ __For more settings use ```dystatic -h```__
 * S3 Redirections
 * Route53
 * www bucket
+* Links in output
+* Hotlinking protection in policy

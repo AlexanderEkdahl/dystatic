@@ -4,6 +4,7 @@ require 'digest/md5'
 require 'aws-sdk'
 require 'mime/types'
 
+require 'dystatic/aux'
 require 'dystatic/s3'
 
 module Dystatic

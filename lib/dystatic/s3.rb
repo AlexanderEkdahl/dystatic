@@ -1,11 +1,13 @@
 module Dystatic
   class S3
-    attr_accessor :source, :bucket, :static, :config
+    include Auxiliary
+
+    attr_accessor :s3, :source, :bucket, :static, :config
 
     def initialize config
-      s3 = AWS::S3.new(:access_key_id     => config['s3_id'],
-                       :secret_access_key => config['s3_secret'],
-                       :s3_endpoint       => config['s3_endpoint'] )
+      self.s3 = AWS::S3.new(:access_key_id     => config['s3_id'],
+                            :secret_access_key => config['s3_secret'],
+                            :s3_endpoint       => config['s3_endpoint'] )
 
       self.source = File.expand_path(config['source'])
       self.static = config['static'].split
@@ -16,15 +18,14 @@ module Dystatic
     end
 
     def setup
-      unless bucket.exists?
-        self.bucket = s3.buckets.create(config['s3_bucket'])
-      end
+      self.bucket = s3.buckets.create(config['s3_bucket'])
 
       bucket.configure_website
+      bucket.policy = policy(bucket)
     end
 
     def deploy
-      local  = files
+      local  = files(source)
       remote = bucket.objects.map(&:key)
 
       (local & remote).each do |f|
@@ -42,12 +43,6 @@ module Dystatic
       end
     end
 
-    def files
-      Dir[source + '/**/{*,.*}']
-        .delete_if { |f| File.directory?(f) }
-        .map       { |f| f.sub(/#{source}\//, '') }
-    end
-
     def path file
       File.join(source, file)
     end
@@ -59,15 +54,11 @@ module Dystatic
       Digest::MD5.hexdigest(File.read(path(file)))
     end
 
-    def gzipped? file
-      File.read(path(file), 2) == [0x1F,0x8B].pack('c*').freeze
-    end
-
     def headers file
       headers = {}
 
       headers[:content_type] = MIME::Types.type_for(path(file)).first
-      headers[:content_encoding] = :gzip if gzipped?(file)
+      headers[:content_encoding] = :gzip if gzipped?(path(file))
 
       static.each do |s|
         if /#{s}\// =~ file

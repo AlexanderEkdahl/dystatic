@@ -31,7 +31,7 @@ end
 
 command :setup do |c|
   c.syntax = 'dystatic setup [options]'
-  c.description = 'Create and setup remote bucket'
+  c.description = 'Create and configure remote bucket'
 
   c.action do |args, options|
     options = Dystatic.configuration(options.__hash__)
