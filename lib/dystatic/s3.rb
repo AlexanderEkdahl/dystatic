@@ -20,8 +20,11 @@ module Dystatic
     def setup
       self.bucket = s3.buckets.create(config['s3_bucket'])
 
+      # Mitigates an issue with aws reporting that the bucket does not exists
+      sleep 1
+
       bucket.configure_website
-      bucket.policy = policy(bucket)
+      bucket.policy = policy
     end
 
     def deploy
@@ -41,32 +44,6 @@ module Dystatic
       (local - remote).each do |f|
         upload(f)
       end
-    end
-
-    def path file
-      File.join(source, file)
-    end
-
-    def md5 file
-      if file.respond_to? :etag
-        return file.etag[1..32]
-      end
-      Digest::MD5.hexdigest(File.read(path(file)))
-    end
-
-    def headers file
-      headers = {}
-
-      headers[:content_type] = MIME::Types.type_for(path(file)).first
-      headers[:content_encoding] = :gzip if gzipped?(path(file))
-
-      static.each do |s|
-        if /#{s}\// =~ file
-          headers[:cache_control] = :"max-age=31536000, public"
-        end
-      end
-
-      headers
     end
 
     def upload file
