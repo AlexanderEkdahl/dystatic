@@ -12,7 +12,7 @@ module Dystatic
       self.bucket = s3.buckets[config['s3_bucket']]
       self.config = config
 
-      setup(config) unless bucket.exists?
+      setup unless bucket.exists?
     end
 
     def setup
