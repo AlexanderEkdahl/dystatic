@@ -1,6 +1,6 @@
 module Dystatic
   module Auxiliary
-    def policy bucket
+    def policy
       AWS::S3::Policy.new do |policy|
         policy.allow(:action     => 's3:GetObject',
                      :resource   => "arn:aws:s3:::#{bucket.name}/*",
@@ -8,7 +8,7 @@ module Dystatic
       end
     end
 
-    def files source
+    def files
       Dir[source + '/**/{*,.*}']
         .delete_if { |f| File.directory?(f) }
         .map       { |f| f.sub(/#{source}\//, '') }

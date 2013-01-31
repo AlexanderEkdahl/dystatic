@@ -24,11 +24,11 @@ module Dystatic
       sleep 1
 
       bucket.configure_website
-      bucket.policy = policy(bucket)
+      bucket.policy = policy
     end
 
     def deploy
-      local  = files(source)
+      local  = files
       remote = bucket.objects.map(&:key)
 
       iterate(local & remote, :title => "Uploading changed") do |f|
@@ -48,7 +48,7 @@ module Dystatic
 
     def iterate total, options = {}, &block
       if defined?(progress)
-        options[:complete_message] = ":title complete"
+        options[:complete_message] = ":title files completed"
         progress(total, options, &block)
       end
 

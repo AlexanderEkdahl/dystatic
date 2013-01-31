@@ -57,7 +57,6 @@ __For more settings use ```dystatic -h```__
 * Push tests(they are currently using private data)
 * Cloudfront invalidation
 * dystatic.yml erb support
-* Website configuration(bucket policy)
 * Speed up etag retrieval https://github.com/aws/aws-sdk-ruby/pull/84 with refinements
 * Refactor out S3 specific code and add SSH implementation
 * S3 Redirections
@@ -65,3 +64,4 @@ __For more settings use ```dystatic -h```__
 * www bucket
 * Links in output
 * Hotlinking protection in policy
+* Customize index and error document
