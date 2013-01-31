@@ -1,6 +1,6 @@
 module Dystatic
   module Auxiliary
-    def policy
+    def policy bucket
       AWS::S3::Policy.new do |policy|
         policy.allow(:action     => 's3:GetObject',
                      :resource   => "arn:aws:s3:::#{bucket.name}/*",

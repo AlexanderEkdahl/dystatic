@@ -24,36 +24,43 @@ module Dystatic
       sleep 1
 
       bucket.configure_website
-      bucket.policy = policy
+      bucket.policy = policy(bucket)
     end
 
     def deploy
       local  = files(source)
       remote = bucket.objects.map(&:key)
 
-      (local & remote).each do |f|
+      iterate(local & remote, :title => "Uploading changed") do |f|
         obj = bucket.objects[f]
 
         upload(f) if md5(f) != md5(obj)
       end
 
-      (remote - local).each do |f|
-        delete(f)
-      end
-
-      (local - remote).each do |f|
+      iterate(local - remote, :title => "Uploading new") do |f|
         upload(f)
       end
+
+      iterate(remote - local, :title => "Deleting removed") do |f|
+        delete(f)
+      end
+    end
+
+    def iterate total, options = {}, &block
+      if defined?(progress)
+        options[:complete_message] = ":title complete"
+        progress(total, options, &block)
+      end
+
+      total.each(&block)
     end
 
     def upload file
       bucket.objects[file].write(File.read(path(file)), headers(file))
-      puts("#{file} uploaded")
     end
 
     def delete file
       bucket.objects[file].delete
-      puts "#{file} deleted"
     end
   end
 end
