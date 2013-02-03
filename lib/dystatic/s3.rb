@@ -13,8 +13,6 @@ module Dystatic
       self.static = config['static'].split
       self.bucket = s3.buckets[config['s3_bucket']]
       self.config = config
-
-      setup unless bucket.exists?
     end
 
     def setup
@@ -28,10 +26,12 @@ module Dystatic
     end
 
     def deploy
+      setup unless bucket.exists?
+
       local  = files
       remote = bucket.objects.map(&:key)
 
-      iterate(local & remote, :title => "Uploading changed") do |f|
+      iterate((local & remote), :title => "Uploading changed") do |f|
         obj = bucket.objects[f]
 
         upload(f) if md5(f) != md5(obj)
@@ -49,7 +49,7 @@ module Dystatic
     def iterate total, options = {}, &block
       if defined?(progress)
         options[:complete_message] = ":title files completed"
-        progress(total, options, &block)
+        return progress(total, options, &block)
       end
 
       total.each(&block)
