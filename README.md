@@ -61,7 +61,14 @@ __For more settings use ```dystatic -h```__
 * Refactor out S3 specific code and add SSH implementation
 * S3 Redirections
 * Route53
-* www bucket
+* www bucket(maybe the www bucket is automatically configured to redirect the requests?)
 * Links in output
 * Hotlinking protection in policy
 * Customize index and error document
+
+##Refactor
+
+setup if setup_required? (bucket exist, folder exist)
+upload/delete
+md5
+remote.upload syntax?

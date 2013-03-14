@@ -31,28 +31,24 @@ module Dystatic
       local  = files
       remote = bucket.objects.map(&:key)
 
-      iterate((local & remote), :title => "Uploading changed") do |f|
+      (local & remote).each do |f|
         obj = bucket.objects[f]
 
-        upload(f) if md5(f) != md5(obj)
+        if md5(f) != md5(obj)
+          puts "Uploading changed: #{f}"
+          upload(f)
+        end
       end
 
-      iterate(local - remote, :title => "Uploading new") do |f|
+      (local - remote).each do |f|
+        puts "Uploading: #{f}"
         upload(f)
       end
 
-      iterate(remote - local, :title => "Deleting removed") do |f|
+      (remote - local).each do |f|
+        puts "Deleting: #{f}"
         delete(f)
       end
-    end
-
-    def iterate total, options = {}, &block
-      if defined?(progress)
-        options[:complete_message] = ":title files completed"
-        return progress(total, options, &block)
-      end
-
-      total.each(&block)
     end
 
     def upload file
