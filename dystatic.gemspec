@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'commander', '~> 4.1.3'
   s.add_dependency 'aws-sdk', '~> 1.8'
-  s.add_dependency 'mime-types', '~> 1.19'
+  s.add_dependency 'mime-types'
 
   s.executables = ['dystatic']
 end
