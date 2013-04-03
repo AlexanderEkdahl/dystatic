@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
 
   s.add_dependency 'commander', '~> 4.1.3'
-  s.add_dependency 'aws-sdk', '~> 1.8.1.1'
+  s.add_dependency 'aws-sdk', '~> 1.8'
   s.add_dependency 'mime-types', '~> 1.19'
 
   s.executables = ['dystatic']
