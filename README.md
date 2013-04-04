@@ -1,5 +1,7 @@
 # Dystatic
 
+[![Code Climate](https://codeclimate.com/github/AlexanderEkdahl/dystatic.png)](https://codeclimate.com/github/AlexanderEkdahl/dystatic)
+
 Deploy your Jekyll/Nanoc/Blacksmith site to S3.
 
 ## Features
