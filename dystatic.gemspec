@@ -2,12 +2,12 @@ Gem::Specification.new do |s|
   s.name          = 'dystatic'
   s.version       = '0.1.0'
   s.date          = '2013-01-17'
-  s.summary       = "Simplifies static site upload"
-  s.description   = "Deploy your static site to S3"
-  s.authors       = ["Alexander Ekdahl"]
+  s.summary       = 'Simplifies static site upload'
+  s.description   = 'Deploy your static site to S3'
+  s.authors       = ['Alexander Ekdahl']
   s.email         = 'ekdahlsandor@gmail.com'
   s.files         = `git ls-files`.split("\n")
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
   s.homepage      = 'https://github.com/AlexanderEkdahl/dystatic'
   s.license       = 'MIT'
 
